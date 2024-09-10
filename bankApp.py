@@ -26,21 +26,33 @@ def login():
         if userInput == '123':
             print('Please enter your password.')
             userInput = input()
-            if userInput == user1.password:
-                print('Success, logged in.')
-                user = user1
-                break
+            i = 0;
+            if i < 3:
+                if userInput == user1.password:
+                    print('Success, logged in.')
+                    user = user1
+                    break
+                else:
+                    print('Password incorrect, try again.')
+                    i = i + 1
             else:
-                print('Password incorrect, try again.')
+                print('Too many incorrect login attempts.')
+                break
         elif userInput == '456':
             print('Please enter your password.')
             userInput = input()
-            if userInput == user2.password:
-                print('Success, logged in.')
-                user = user2
-                break
+            i = 0;
+            if i < 3:
+                if userInput == user2.password:
+                    print('Success, logged in.')
+                    user = user2
+                    break
+                else:
+                    print('Password incorrect, try again.')
+                    i = i + 1
             else:
-                print('Password incorrect, try again.')
+                print('Too many incorrect login attempts.')
+                break
         else:
             print('Invalid, please enter a valid ID number.')
 
