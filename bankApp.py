@@ -1,6 +1,6 @@
 import sys
 
-print('Welcome to the Bank App! To close the program, simply enter "STOP" at any time, to beg.')
+print('Welcome to the Bank App! To close the program, simply enter "STOP" at any time, to begin:')
 
 class User1:
     id = 123
