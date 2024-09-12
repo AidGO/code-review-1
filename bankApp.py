@@ -80,24 +80,33 @@ while True:
             user.bankValue = userInput - user.bankValue
             print(f"New Bank Value: {user.bankValue}")
     elif userInput == 'Transfer':
+        transferTimes = 0
+
         print('Enter the user ID to transfer to.')
         userTransferId = int(input())
         print('Enter the amount to transfer.')
         amountTransfer = int(input())
 
-        if amountTransfer > user.bankValue:
-            print("Bank balance is lower than attempted transer amount, please try again.")
-        else:
-            user.bankValue = user.bankValue - amountTransfer
-    
-            if userTransferId == 123:
-                user1.bankValue = user1.bankValue + amountTransfer
-                print(f"Your New Bank Value: {user.bankValue}")
-            elif userTransferId == 456:
-                user2.bankValue = user2.bankValue + amountTransfer
-                print(f"Your New Bank Value: {user.bankValue}")
+        if transferTimes < 3:
+            if amountTransfer > user.bankValue:
+                print("Bank balance is lower than attempted transer amount, please try again.")
             else:
-                print("You entered an invalid ID to transfer to, please try again") 
+                user.bankValue = user.bankValue - amountTransfer
+                transferTimes = transferTimes + 1
+        
+                if userTransferId == 123:
+                    user1.bankValue = user1.bankValue + amountTransfer
+                    print(f"Your New Bank Value: {user.bankValue}")
+                elif userTransferId == 456:
+                    user2.bankValue = user2.bankValue + amountTransfer
+                    print(f"Your New Bank Value: {user.bankValue}")
+                else:
+                    print("You entered an invalid ID to transfer to, please try again")
+        else:
+            print("You have reached your limit on transfers, please try again later")
+
+
+    
                   
     elif userInput == 'STOP':
         print('Bye.')
