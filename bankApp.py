@@ -15,103 +15,100 @@ class User2:
 user = ""
 user1 = User1
 user2 = User2
+loginAttempts = 0       #i was reset to 0 after each incorrect login attempt, causing i never to go above 3, same with transerTimes
+transferTimes  = 0      #created "loginAttempts and globaled transferTimes to fix"
 
-def login():
+
+def get_password_from_username(username):         #added function to ease the burden of login()
+    if username == '123':
+        return user1.password
+    else:
+        return user2.password
+    
+def deposit(amount):
+        user.bankValue = amount + user.bankValue
+        print(f"New Bank Value: {user.bankValue}")
+
+def withdraw(amount):
+    if amount > user.bankValue:
+        print("Bank balance is lower than attempted withdrawl amount, please try again.")
+    else:
+        user.bankValue = user.bankValue - amount
+        print(f"New Bank Value: {user.bankValue}")
+
+def transfer(ID, amount):
+    global transferTimes
+
+    if transferTimes < 3:
+        if amount > user.bankValue:
+            print("Bank balance is lower than attempted tranfser amount, please try again.") #changed transer to transfer
+        else:
+            user.bankValue = user.bankValue - amount
+            transferTimes = transferTimes + 1
+    
+            if ID == 123:
+                user1.bankValue = user1.bankValue + amount
+                print(f"Your New Bank Value: {user.bankValue}")
+            elif ID == 456:
+                user2.bankValue = user2.bankValue + amount
+                print(f"Your New Bank Value: {user.bankValue}")
+            else:
+                print("You entered an invalid ID to transfer to, please try again")
+    else:
+        print("You have reached your limit on transfers, please try again later")
+
+def login():                                           #shortened login function
     while True:
         print('Please enter your ID number.')
         global user
+        global loginAttempts
 
-        userInput = input()
+        inputUsername = input()
 
-        if userInput == '123':
+        if inputUsername == '123' or inputUsername == '456':
             print('Please enter your password.')
-            userInput = input()
-            i = 0;
-            if i < 3:
-                if userInput == user1.password:
+            passwordInput = input()                        #Removed Semicolon, changed i to loginAttempts for better readability
+            if loginAttempts < 3:                          #Globaled loginAttempts so it doesn't get reset to 0
+                if passwordInput == get_password_from_username(inputUsername):
                     print('Success, logged in.')
                     user = user1
                     break
                 else:
                     print('Password incorrect, try again.')
-                    i = i + 1
+                    loginAttempts = loginAttempts + 1
             else:
                 print('Too many incorrect login attempts.')
-                break
-        elif userInput == '456':
-            print('Please enter your password.')
-            userInput = input()
-            i = 0;
-            if i < 3:
-                if userInput == user2.password:
-                    print('Success, logged in.')
-                    user = user2
-                    break
-                else:
-                    print('Password incorrect, try again.')
-                    i = i + 1
-            else:
-                print('Too many incorrect login attempts.')
-                break
+                sys.exit()                             #changed break to sys.exit, otherwise program would continue even though password attempts were up
         else:
             print('Invalid, please enter a valid ID number.')
 
-login()
+def main():                                            #added main function
+    login()
 
-while True: 
-    print('Please enter the function you want to use: "Check Balance", "Deposit", "Withdraw", "Transfer", or "Log out".')
+    while True:                                        #cleaned up loop by using new functions
+        print('Please enter the function you want to use: "Check Balance", "Deposit", "Withdraw", "Transfer", or "Log out".')
 
-    userInput = input()
+        userInput = input()
 
-    if userInput == 'Check Balance':
-        print(user.bankValue)
-    elif userInput == 'Deposit':
-        print('Enter the amount to deposit')
-        userInput = int(input())
-        user.bankValue = userInput + user.bankValue
-        print(f"New Bank Value: {user.bankValue}")
-    elif userInput == 'Withdraw':
-        print('Enter the amount to withdraw.')
-        userInput = int(input())
-
-        if userInput > user.bankValue:
-            print("Bank balance is lower than attempted withdrawl amount, please try again.")
+        if userInput == 'Check Balance':
+            print(user.bankValue)
+        elif userInput == 'Deposit':
+            userInput = int(input('Enter the amount to deposit\n'))
+            deposit(userInput)
+        elif userInput == 'Withdraw':
+            userInput = int(input('Enter the amount to withdraw\n'))
+            withdraw(userInput)
+        elif userInput == 'Transfer':
+            userTransferId = int(input('Enter the user ID to transfer to\n'))
+            amountTransfer = int(input('Enter the amount to transfer\n'))
+            transfer(userTransferId, amountTransfer)      
+        elif userInput == 'STOP':
+            print('Bye.')
+            break
+        elif userInput == 'Log out':
+            login()
         else:
-            user.bankValue = userInput - user.bankValue
-            print(f"New Bank Value: {user.bankValue}")
-    elif userInput == 'Transfer':
-        transferTimes = 0
+            print('Invalid, please enter a valid function.')
 
-        print('Enter the user ID to transfer to.')
-        userTransferId = int(input())
-        print('Enter the amount to transfer.')
-        amountTransfer = int(input())
-
-        if transferTimes < 3:
-            if amountTransfer > user.bankValue:
-                print("Bank balance is lower than attempted transer amount, please try again.")
-            else:
-                user.bankValue = user.bankValue - amountTransfer
-                transferTimes = transferTimes + 1
-        
-                if userTransferId == 123:
-                    user1.bankValue = user1.bankValue + amountTransfer
-                    print(f"Your New Bank Value: {user.bankValue}")
-                elif userTransferId == 456:
-                    user2.bankValue = user2.bankValue + amountTransfer
-                    print(f"Your New Bank Value: {user.bankValue}")
-                else:
-                    print("You entered an invalid ID to transfer to, please try again")
-        else:
-            print("You have reached your limit on transfers, please try again later")
-
-
-    
-                  
-    elif userInput == 'STOP':
-        print('Bye.')
-        break
-    elif userInput == 'Log out':
-        login()
-    else:
-        print('Invalid, please enter a valid function.')
+if __name__ == "__main__":
+    main()
